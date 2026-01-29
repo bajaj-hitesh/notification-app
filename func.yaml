@@ -2,5 +2,8 @@ specVersion: 0.36.0
 name: knative-nodejs-function
 runtime: node
 created: 2026-01-29T17:46:18Z
+deploy:
+  annotations:
+    autoscaling.knative.dev/minScale: "1"
 
 # Made with Bob

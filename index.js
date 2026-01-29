@@ -24,6 +24,23 @@ app.get('/', (req, res) => {
   res.json(response);
 });
 
+// POST endpoint - Accepts and logs request body
+app.post('/', (req, res) => {
+  console.log('=== POST Request Received ===');
+  console.log('Request Body:', JSON.stringify(req.body, null, 2));
+  console.log('Content-Type:', req.get('Content-Type'));
+  console.log('============================');
+  
+  const response = {
+    message: 'POST request received successfully',
+    timestamp: new Date().toISOString(),
+    receivedData: req.body,
+    dataSize: JSON.stringify(req.body).length
+  };
+  
+  res.status(200).json(response);
+});
+
 // Health check endpoint for Kubernetes probes
 app.get('/health', (req, res) => {
   res.status(200).json({ 
