@@ -1,6 +1,40 @@
 const express = require('express');
+const axios = require('axios');
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+// Slack webhook URL - should be set as environment variable
+const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
+
+// Function to send Slack notification
+async function sendSlackNotification(message, channel = '#mobile-badge-provisioning-alerts') {
+  try {
+    const payload = {
+      channel: channel,
+      username: 'webhookbot',
+      text: message,
+      icon_emoji: ':ghost:'
+    };
+
+    console.log('Sending Slack notification:', JSON.stringify(payload, null, 2));
+    
+    const response = await axios.post(SLACK_WEBHOOK_URL, payload, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    console.log('Slack notification sent successfully:', response.status);
+    return { success: true, status: response.status };
+  } catch (error) {
+    console.error('Failed to send Slack notification:', error.message);
+    if (error.response) {
+      console.error('Response status:', error.response.status);
+      console.error('Response data:', error.response.data);
+    }
+    return { success: false, error: error.message };
+  }
+}
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -24,18 +58,28 @@ app.get('/', (req, res) => {
   res.json(response);
 });
 
-// POST endpoint - Accepts and logs request body
-app.post('/', (req, res) => {
+// POST endpoint - Accepts and logs request body, sends Slack notification
+app.post('/', async (req, res) => {
   console.log('=== POST Request Received ===');
   console.log('Request Body:', JSON.stringify(req.body, null, 2));
   console.log('Content-Type:', req.get('Content-Type'));
   console.log('============================');
   
+  // Prepare Slack message from request body
+  const slackMessage = req.body.message ||
+    `New POST request received:\n${JSON.stringify(req.body, null, 2)}`;
+  
+  const slackChannel = req.body.channel || '#mobile-badge-provisioning-alerts';
+  
+  // Send Slack notification
+  const slackResult = await sendSlackNotification(slackMessage, slackChannel);
+  
   const response = {
     message: 'POST request received successfully',
     timestamp: new Date().toISOString(),
     receivedData: req.body,
-    dataSize: JSON.stringify(req.body).length
+    dataSize: JSON.stringify(req.body).length,
+    slackNotification: slackResult
   };
   
   res.status(200).json(response);
