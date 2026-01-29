@@ -1,61 +1,6 @@
-specVersion: 0.35.0
+specVersion: 0.36.0
 name: knative-nodejs-function
 runtime: node
-registry: ""
-image: ""
-imageDigest: ""
-builder: s2i
-builderImages:
-  s2i: registry.access.redhat.com/ubi8/nodejs-18:latest
-buildEnvs: []
-envs: []
-annotations: {}
-options: {}
-labels: []
-healthEndpoints:
-  liveness: /health
-  readiness: /ready
-volumes: []
-buildpacks: []
-buildArgs: []
 created: 2026-01-29T17:46:18Z
-invoke: http
-build:
-  git:
-    url: ""
-    revision: ""
-    contextDir: ""
-  buildpacks: []
-  builder: s2i
-  buildEnvs: []
-run:
-  envs:
-    - name: NODE_ENV
-      value: production
-  volumes: []
-deploy:
-  namespace: ""
-  annotations:
-    autoscaling.knative.dev/minScale: "0"
-    autoscaling.knative.dev/maxScale: "10"
-    autoscaling.knative.dev/target: "100"
-  options:
-    scale:
-      min: 0
-      max: 10
-      metric: concurrency
-      target: 100
-      utilization: 70
-  labels: []
-  healthEndpoints:
-    liveness: /health
-    readiness: /ready
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 1000m
-      memory: 512Mi
 
 # Made with Bob
