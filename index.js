@@ -4,7 +4,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 // Slack webhook URL - should be set as environment variable
-const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL || 'https://hooks.slack.com/services/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';
+const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
 
 // Function to send Slack notification
 async function sendSlackNotification(message, channel = '#mobile-badge-provisioning-alerts') {
