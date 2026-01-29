@@ -4,9 +4,9 @@ runtime: node
 registry: ""
 image: ""
 imageDigest: ""
-builder: pack
+builder: s2i
 builderImages:
-  pack: docker.io/paketobuildpacks/builder-jammy-base:latest
+  s2i: registry.access.redhat.com/ubi8/nodejs-18:latest
 buildEnvs: []
 envs: []
 annotations: {}
@@ -26,7 +26,7 @@ build:
     revision: ""
     contextDir: ""
   buildpacks: []
-  builder: pack
+  builder: s2i
   buildEnvs: []
 run:
   envs:
